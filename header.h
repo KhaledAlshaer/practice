@@ -4,24 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef enum {
-        SemiColon,
-	OPEN_PAREN,
-	CLOSE_PAREN,
-	OPEN_CURLY_PAREN,
-	CLOSE_CURLY_PAREN,
-    UNKNOWN,
-} Seperators;
-
-typedef enum{
-	RETURN,
-	INT,
-} Keywords;
-
-
-typedef enum {
-	LITERAL_INT,
-} Literals;
+#define MAX_SIZE 1024
 
 typedef enum {
     TOKEN_SEMICOLON,
@@ -32,6 +15,7 @@ typedef enum {
     TOKEN_RETURN,
     TOKEN_INT,
     TOKEN_LITERAL_INT,
+    TOKEN_IDENTIFIER,
     TOKEN_UNKNOWN,
 } TokenType;
 
@@ -39,5 +23,16 @@ typedef struct {
     TokenType type;
     char *value;
 } Token;
+
+
+extern Token tokens[MAX_SIZE];
+extern int TokenCount;
+extern int TokenIndex;
+
+void lexer(FILE *file);
+void parse_return ();
+void parse_main();
+void parser ();
+void add_token(TokenType type, const char *val);
 
 #endif
