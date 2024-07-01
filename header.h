@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 #define MAX_SIZE 1024
 
@@ -17,6 +19,7 @@ typedef enum {
     TOKEN_LITERAL_INT,
     TOKEN_IDENTIFIER,
     TOKEN_UNKNOWN,
+    TOKEN_MAIN,
 } TokenType;
 
 typedef struct {
@@ -24,15 +27,38 @@ typedef struct {
     char *value;
 } Token;
 
+typedef struct TokenNode 
+{
+    Token token;
+    struct TokenNode *next;
+} TokenNode;
+
+typedef struct ExpressionNode 
+{
+    Token token;
+    struct ExpressionNode *child;
+    struct ExpressionNode *next;
+} ExpressionNode;
+
+typedef struct RootNode 
+{
+    struct ExpressionNode *child;
+} ROOT;
+
 
 extern Token tokens[MAX_SIZE];
 extern int TokenCount;
 extern int TokenIndex;
 
 void lexer(FILE *file);
-void parse_return ();
-void parse_main();
+void parse_return (ROOT *Root, ROOT *child);
+void parse_main(ROOT *Root, ROOT *child);
 void parser ();
 void add_token(TokenType type, const char *val);
+ExpressionNode *create_expression_node(Token token, ExpressionNode *child, ExpressionNode *next);
+TokenNode *create_token_node(Token token, TokenNode *next);
+ROOT *create_root_node(ExpressionNode *child);
+void print_expression_tree(ExpressionNode *node, int depth);
+void print_parse_tree(ROOT *root);
 
 #endif

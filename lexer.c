@@ -1,8 +1,9 @@
 #include "header.h"
 
-Token tokens[MAX_SIZE];
+/**Token tokens[MAX_SIZE];
 int TokenCount = 0;
 int TokenIndex = 0;
+*/
 
 void add_token(TokenType type, const char *val)
 {
@@ -21,8 +22,8 @@ void add_token(TokenType type, const char *val)
  * lexer - A Funtion That Takes The Source File And Tokenize It's Contents.
  * @file: The Source FIle
  */
-void lexer(FILE *file) {
-
+void lexer(FILE *file)
+{
     char word[256];
     //int column = 0;
     //int line = 1;
@@ -33,7 +34,7 @@ void lexer(FILE *file) {
     if (file == NULL)
     {
         perror("File Doesn't Exist");
-        token.type = UNKNOWN;
+        token.type = TOKEN_UNKNOWN;
         add_token(TOKEN_UNKNOWN, "NULL");
     }
 
@@ -78,10 +79,10 @@ void lexer(FILE *file) {
                         add_token(TOKEN_IDENTIFIER, word);
                     }
 
-                } else if (isdigit(ch)) {
+                } else if (isdigit(ch = fgetc(file))) {
                     word[i++] = ch;
 
-                    while (isdigit(ch))
+                    while (isdigit(ch = fgetc(file)))
                     {
                         word[i++] = ch;
                     }
@@ -90,14 +91,11 @@ void lexer(FILE *file) {
                     word[i] = '\0';
                     add_token(TOKEN_LITERAL_INT, word);
 
-                    return(token);
                 } else if (isspace(ch))
                 {
                     continue;
                 } else {
                     add_token(TOKEN_UNKNOWN, "");
-
-                    return(token);
                 }
 
                 break;

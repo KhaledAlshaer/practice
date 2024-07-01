@@ -4,19 +4,8 @@
 //int TokenCount = 0;
 //int TokenIndex = 0;
 
-typedef struct ExpressionNode 
-{
-    Token token;
-    struct ExpressionNode *child;
-} ExpressionNode;
 
-typedef struct TokenNode 
-{
-    Token token;
-    struct TokenNode *next;
-} TokenNode;
-
-ExpressionNode *create_expression_node(Token token, ExpressionNode *child)
+ExpressionNode *create_expression_node(Token token, ExpressionNode *child, ExpressionNode *next)
 {
     ExpressionNode *node = (ExpressionNode *)malloc(sizeof(ExpressionNode));
     if (node == NULL)
@@ -27,6 +16,7 @@ ExpressionNode *create_expression_node(Token token, ExpressionNode *child)
 
     node->token = token;
     node->child = child;
+    node->next = next;
 
     return(node);
 }
@@ -46,69 +36,102 @@ TokenNode *create_token_node(Token token, TokenNode *next)
     return(node);
 }
 
-/**
- * parser - 
- */
-void parser()
+ROOT *create_root_node(ExpressionNode *child)
 {
+    ROOT *node = (ROOT *)malloc(sizeof(ROOT));
+
+    if (node == NULL)
+    {
+        perror("Failed to allocate memory for RootNode");
+        exit(EXIT_FAILURE);
+    }
+
+    node->child = child;
+
+    return(node);
 }
-void parse_return ()
+
+
+void parse_return (ROOT *Root, ROOT *current)
 {
-    TokenNode openParen = {TOKEN_OPEN_PAREN, "("};
-    TokenNode val = {TOKEN_LITERAL_INT, tokens[TokenIndex].value};
-    TokenNode closeParen = {TOKEN_CLOSE_PAREN, ")"};
-    TokenNode scolon = {TOKEN_SEMICOLON, ";"};
-    ExpressionNode ret = {TOKEN_RETURN, "return"};
 
     if (TokenIndex >= TokenCount)
     {
-        fprintf(stderr, "Error: Reached end of tokens :'\)\n");
+        fprintf(stderr, "Error: Reached end of tokens :')\n");
         return;
     }
 
     if (strcmp(tokens[TokenIndex].value, "return") == 0)
     {
+        Token retToken = {TOKEN_RETURN, "return"};
+
+        ExpressionNode *ret = create_expression_node(retToken, NULL, NULL);
         TokenIndex++;
 
         if (TokenIndex >= TokenCount)
         {
-            fprintf(stderr, "Error: Unexpected end of tokens :'\)\n");
+            fprintf(stderr, "Error: Unexpected end of tokens :')\n");
             return;
         }
 
         if (strcmp(tokens[TokenIndex].value, "(") == 0)
         {
+            Token openParenToken = {TOKEN_OPEN_PAREN, "("};
+
+            TokenNode *openParen = create_token_node(openParenToken, NULL);
             TokenIndex++;
 
             if (TokenIndex >= TokenCount)
             {
-                fprintf(stderr, "Error: Unexpected end of tokens :'\)\n");
+                fprintf(stderr, "Error: Unexpected end of tokens :')\n");
                 return;
             }
 
             if (tokens[TokenIndex].type == TOKEN_LITERAL_INT)
             {
+                Token valToken = {TOKEN_LITERAL_INT, tokens[TokenIndex].value};
+
+                TokenNode *val = create_token_node(valToken, NULL);
                 TokenIndex++;
 
                 if (TokenIndex >= TokenCount)
                 {
-                    fprintf(stderr, "Error: Unexpected end of tokens :'\)\n");
+                    fprintf(stderr, "Error: Unexpected end of tokens :')\n");
                     return;
                 }
 
                 if (strcmp(tokens[TokenIndex].value, ")") == 0)
                 {
+                    Token closeParenToken = {TOKEN_CLOSE_PAREN, ")"};
+
+                    TokenNode *closeParen = create_token_node(closeParenToken, NULL);
                     TokenIndex++;
 
                     if (TokenIndex >= TokenCount)
                     {
-                        fprintf(stderr, "Error: Unexpected end of tokens :'\)\n");
+                        fprintf(stderr, "Error: Unexpected end of tokens :')\n");
                         return;
                     }
 
                     if (strcmp(tokens[TokenIndex].value, ";") == 0)
                     {
+                        Token scolonToken = {TOKEN_SEMICOLON, ";"};
+
+                        TokenNode *scolon = create_token_node(scolonToken, NULL);
+
+                        openParen->next = val;
+                        val->next = closeParen;
+                        closeParen->next = scolon;
+                        ret->next = (ExpressionNode *) openParen;
+                        Root->child = ret;
+                        current->child = ret->child;
+
                         printf("Correct Return Statment horaaaaay!!\n");
+                        free(scolon);
+                        free(closeParen);
+                        free(val);
+                        free(openParen);
+                        free(ret);
                         return;
                     }
                 }
@@ -116,54 +139,121 @@ void parse_return ()
         }
     }
 
-    fprintf(stderr, "Syntax Error: Invalid Return Statment :'\)\n");
+    fprintf(stderr, "Syntax Error: Invalid Return Statment :')\n");
 }
 
 
-void parse_main()
+void parse_main(ROOT *Root, ROOT *current)
 {
     if (TokenIndex >= TokenCount)
     {
-        fprintf(stderr, "Error: Reached end of tokens :'\)\n");
+        fprintf(stderr, "Error: Reached end of tokens :')\n");
         return;
     }
 
     if (strcmp(tokens[TokenIndex].value, "int") == 0)
     {
+        Token INT_Token = {TOKEN_INT, "int"};
+
+        ExpressionNode *INT = create_expression_node(INT_Token, NULL, NULL);
         TokenIndex++;
 
         if (TokenIndex >= TokenCount)
         {
-            fprintf(stderr, "Error: Reached end of tokens :'\)\n");
+            fprintf(stderr, "Error: Reached end of tokens :')\n");
             return;
         }
 
         if (strcmp(tokens[TokenIndex].value, "main") == 0)
         {
+            Token MAINToken = {TOKEN_MAIN, "main"};
+
+            TokenNode *MAIN = create_token_node(MAINToken, NULL);
             TokenIndex++;
 
             if (TokenIndex >= TokenCount)
             {
-                fprintf(stderr, "Error: Reached end of tokens :'\)\n");
+                fprintf(stderr, "Error: Reached end of tokens :')\n");
                 return;
             }
 
             if (strcmp(tokens[TokenIndex].value, "(") == 0)
             {
+                Token openParenToken = {TOKEN_OPEN_PAREN, "("};
+
+                TokenNode *openParen = create_token_node(openParenToken, NULL);
                 TokenIndex++;
 
                 if (TokenIndex >= TokenCount)
                 {
-                    fprintf(stderr, "Error: Reached end of tokens :'\)\n");
+                    fprintf(stderr, "Error: Reached end of tokens :')\n");
                     return;
                 }
 
                 if (strcmp(tokens[TokenIndex].value, ")") == 0)
                 {
-                    printf("Correct main Statment horaaaaay!!\n");
-                    return;
+                    Token closeParenToken = {TOKEN_CLOSE_PAREN, ")"};
+
+                    TokenNode *closeParen = create_token_node(closeParenToken, NULL);
+                    TokenIndex++;
+
+                    if (TokenIndex >= TokenCount)
+                    {
+                        fprintf(stderr, "Error: Reached end of tokens :')\n");
+                        return;
+                    }
+
+                    if (strcmp(tokens[TokenIndex].value, "{") == 0)
+                    {
+                        Token openCurlyToken = {TOKEN_OPEN_CURLY_PAREN, "{"};
+
+                        TokenNode *openCurly = create_token_node(openCurlyToken, NULL);
+                        
+                        MAIN->next = openParen;
+                        openParen->next = closeParen;
+                        closeParen->next = openCurly;
+                        INT->next = (ExpressionNode *)MAIN;
+                        Root->child = INT;
+                        current->child = INT->child;
+
+                        printf("Correct main Statment horaaaaay!!\n");
+
+                        free(openCurly);
+                        free(closeParen);
+                        free(openParen);
+                        free(MAIN);
+                        free(INT);
+                        return;
+                    }
                 }
             }
         }
     }
+}
+
+
+
+/**
+ * parser - The Main Parser Function
+ */
+void parser()
+{
+    ROOT *root = create_root_node(NULL);
+    ROOT *current = (ROOT *)root->child;
+
+    while (TokenIndex <= TokenCount)
+    {
+        if (strcmp(tokens[TokenIndex].value, "int") == 0 && strcmp(tokens[TokenIndex + 1].value, "main") == 0)
+        {
+            parse_main(root, current);
+        }
+        else if (strcmp(tokens[TokenIndex].value, "return") == 0)
+        {
+            parse_return(root, current);
+        }
+
+        TokenIndex++;
+    }
+
+    print_parse_tree(root);   
 }
