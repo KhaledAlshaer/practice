@@ -123,7 +123,6 @@ void parse_return (ROOT *Root, ROOT *current)
                         val->next = closeParen;
                         closeParen->next = scolon;
                         ret->next = (ExpressionNode *) openParen;
-                        Root->child = ret;
                         current->child = ret->child;
 
                         printf("Correct Return Statment horaaaaay!!\n");
