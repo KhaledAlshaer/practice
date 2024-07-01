@@ -79,7 +79,8 @@ void lexer(FILE *file)
                         add_token(TOKEN_IDENTIFIER, word);
                     }
 
-                } else if (isdigit(ch = fgetc(file))) {
+                } else if (isdigit(ch))
+		{
                     word[i++] = ch;
 
                     while (isdigit(ch = fgetc(file)))
