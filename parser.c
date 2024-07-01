@@ -146,7 +146,6 @@ void parse_return (ROOT *Root, ROOT *current)
             }
             else
             {
-		printf("toke value: %s\n", tokens[TokenIndex].value);
                 fprintf(stderr,"Syntax Error: Expected an Integer\n");
             }
         }
