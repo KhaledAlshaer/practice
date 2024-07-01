@@ -134,8 +134,25 @@ void parse_return (ROOT *Root, ROOT *current)
                         free(ret);
                         return;
                     }
+                    else
+                    {
+                        fprintf(stderr,"Syntax Error: Expected ;\n");
+                    }
+                }
+                else
+                {
+                    fprintf(stderr,"Syntax Error: Expected )\n");
                 }
             }
+            else
+            {
+		printf("toke value: %s\n", tokens[TokenIndex].value);
+                fprintf(stderr,"Syntax Error: Expected an Integer\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr,"Syntax Error: Expected (\n");
         }
     }
 
@@ -225,13 +242,56 @@ void parse_main(ROOT *Root, ROOT *current)
                         free(INT);
                         return;
                     }
+                    else
+                    {
+                        fprintf(stderr,"Syntax Error: Expected {\n");
+                    }
+                }
+                else
+                {
+                    fprintf(stderr,"Syntax Error: Expected )\n");
                 }
             }
+            else
+            {
+                fprintf(stderr,"Syntax Error: Expected (\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr,"Syntax Error: Expected main\n");
         }
     }
 }
 
 
+
+void print_expression_tree(ExpressionNode *node, int depth)
+{
+    if (node == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < depth; ++i) {
+        printf("  ");
+    }
+    printf("- Token: %s\n", node->token.value);
+
+    print_expression_tree(node->child, depth + 1);
+
+    print_expression_tree(node->next, depth);
+}
+
+void print_parse_tree(ROOT *root)
+{
+    if (root == NULL) {
+        printf("Parse tree is empty.\n");
+        return;
+    }
+
+    printf("Parse Tree:\n");
+    print_expression_tree(root->child, 0);
+}
 
 /**
  * parser - The Main Parser Function
@@ -241,7 +301,7 @@ void parser()
     ROOT *root = create_root_node(NULL);
     ROOT *current = (ROOT *)root->child;
 
-    while (TokenIndex <= TokenCount)
+    while (TokenIndex < TokenCount)
     {
         if (strcmp(tokens[TokenIndex].value, "int") == 0 && strcmp(tokens[TokenIndex + 1].value, "main") == 0)
         {
