@@ -127,11 +127,7 @@ void parse_return (ROOT *Root, ExpressionNode *current)
                         current->child = ret->child;
 
                         printf("Correct Return Statment horaaaaay!!\n");
-                        free(scolon);
-                        free(closeParen);
-                        free(val);
-                        free(openParen);
-                        free(ret);
+
                         return;
                     }
                     else
@@ -234,11 +230,6 @@ void parse_main(ROOT *Root, ExpressionNode *current)
 
                         printf("Correct main Statment horaaaaay!!\n");
 
-                        free(openCurly);
-                        free(closeParen);
-                        free(openParen);
-                        free(MAIN);
-                        free(INT);
                         return;
                     }
                     else
@@ -300,7 +291,7 @@ void parser()
     ExpressionNode *current;
 
     root = create_root_node(NULL);
-    current = (ROOT *)root->child;
+    current = (ExpressionNode *)root->child;
 
     while (TokenIndex < TokenCount)
     {

@@ -3,6 +3,7 @@
 Token tokens[MAX_SIZE];
 int TokenCount = 0;
 int TokenIndex = 0;
+ROOT *root;
 
 /**
  * 
@@ -24,6 +25,13 @@ int main()
 	fclose(file);
 
 	parser();
+
+	free(root);
+
+	for (int i = 0; i < TokenCount; i++)
+	{
+		free(tokens[i].value);
+	}
 
 	return(0);
 }
