@@ -61,5 +61,8 @@ TokenNode *create_token_node(Token token, TokenNode *next);
 ROOT *create_root_node(ExpressionNode *child);
 void print_expression_tree(ExpressionNode *node, int depth);
 void print_parse_tree(ROOT *root);
+void free_expression_node(ExpressionNode *node);
+void free_token_node(TokenNode *node);
+void free_root_node(ROOT *root);
 
 #endif

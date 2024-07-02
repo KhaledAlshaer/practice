@@ -51,6 +51,41 @@ ROOT *create_root_node(ExpressionNode *child)
     return(node);
 }
 
+void free_expression_node(ExpressionNode *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+
+    free(node->child);
+    free(node->next);
+    free(node);
+}
+
+void free_token_node(TokenNode *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+
+    free(node->next);
+    free(node);
+}
+
+void free_root_node(ROOT *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    free_expression_node(root->child);
+
+    free(root);
+}
+
 
 void parse_return (ROOT *Root, ExpressionNode *current)
 {
@@ -127,7 +162,11 @@ void parse_return (ROOT *Root, ExpressionNode *current)
                         current->child = ret->child;
 
                         printf("Correct Return Statment horaaaaay!!\n");
-
+                        free(scolon);
+                        free(closeParen);
+                        free(val);
+                        free(openParen);
+                        free(ret);
                         return;
                     }
                     else
@@ -230,6 +269,11 @@ void parse_main(ROOT *Root, ExpressionNode *current)
 
                         printf("Correct main Statment horaaaaay!!\n");
 
+                        free(openCurly);
+                        free(closeParen);
+                        free(openParen);
+                        free(MAIN);
+                        free(INT);
                         return;
                     }
                     else
@@ -291,7 +335,7 @@ void parser()
     ExpressionNode *current;
 
     root = create_root_node(NULL);
-    current = (ExpressionNode *)root->child;
+    current = root->child;
 
     while (TokenIndex < TokenCount)
     {
@@ -307,5 +351,7 @@ void parser()
         TokenIndex++;
     }
 
-    print_parse_tree(root);   
+    print_parse_tree(root); 
+
+    free_root_node(root);
 }
