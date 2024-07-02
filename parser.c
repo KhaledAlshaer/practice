@@ -58,8 +58,8 @@ void free_expression_node(ExpressionNode *node)
         return;
     }
 
-    free(node->child);
-    free(node->next);
+    free_expression_node(node->child);
+    free_expression_node(node->next);
     free(node);
 }
 
@@ -70,7 +70,7 @@ void free_token_node(TokenNode *node)
         return;
     }
 
-    free(node->next);
+    free_token_node(node->next);
     free(node);
 }
 
@@ -323,10 +323,8 @@ void print_parse_tree(ROOT *root)
  */
 void parser()
 {
-    ExpressionNode *current;
-
     root = create_root_node(NULL);
-    current = root->child;
+    ExpressionNode *current = root->child;
 
     while (TokenIndex < TokenCount)
     {

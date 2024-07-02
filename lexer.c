@@ -36,6 +36,8 @@ void lexer(FILE *file)
         perror("File Doesn't Exist");
         token.type = TOKEN_UNKNOWN;
         add_token(TOKEN_UNKNOWN, "NULL");
+
+        return;
     }
 
     while ((ch = fgetc(file)) != EOF)
@@ -80,7 +82,7 @@ void lexer(FILE *file)
                     }
 
                 } else if (isdigit(ch))
-		{
+                {
                     word[i++] = ch;
 
                     while (isdigit(ch = fgetc(file)))
@@ -100,6 +102,5 @@ void lexer(FILE *file)
                 }
 
                 break;
-        }
     }
 }
