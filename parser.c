@@ -87,7 +87,7 @@ void free_root_node(ROOT *root)
 }
 
 
-void parse_return (ROOT *Root, ExpressionNode *current)
+void parse_return (ExpressionNode *current)
 {
 
     if (TokenIndex >= TokenCount)
@@ -158,8 +158,7 @@ void parse_return (ROOT *Root, ExpressionNode *current)
                         val->next = closeParen;
                         closeParen->next = scolon;
                         ret->next = (ExpressionNode *) openParen;
-                        Root->child = ret;
-                        current->child = ret->child;
+                        current = ret;
 
                         printf("Correct Return Statment horaaaaay!!\n");
                         
@@ -191,7 +190,7 @@ void parse_return (ROOT *Root, ExpressionNode *current)
 }
 
 
-void parse_main(ROOT *Root, ExpressionNode *current)
+void parse_main(ExpressionNode *current)
 {
     if (TokenIndex >= TokenCount)
     {
@@ -330,11 +329,11 @@ void parser()
     {
         if (strcmp(tokens[TokenIndex].value, "int") == 0 && strcmp(tokens[TokenIndex + 1].value, "main") == 0)
         {
-            parse_main(root, current);
+            parse_main(current);
         }
         else if (strcmp(tokens[TokenIndex].value, "return") == 0)
         {
-            parse_return(root, current);
+            parse_return(current);
         }
 
         TokenIndex++;

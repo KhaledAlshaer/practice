@@ -52,8 +52,8 @@ extern int TokenIndex;
 extern ROOT *root;
 
 void lexer(FILE *file);
-void parse_return (ROOT *Root, ExpressionNode *child);
-void parse_main(ROOT *Root, ExpressionNode *child);
+void parse_return (ExpressionNode *child);
+void parse_main(ExpressionNode *child);
 void parser ();
 void add_token(TokenType type, const char *val);
 ExpressionNode *create_expression_node(Token token, ExpressionNode *child, ExpressionNode *next);

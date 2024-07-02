@@ -102,5 +102,6 @@ void lexer(FILE *file)
                 }
 
                 break;
+        }
     }
 }
