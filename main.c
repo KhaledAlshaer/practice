@@ -6,8 +6,8 @@ int TokenIndex = 0;
 ROOT *root;
 
 /**
- * 
- * 
+ * main - Compiler's Main Function
+ * Return: Returns 0 on Success
  */
 int main()
 {

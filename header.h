@@ -49,6 +49,7 @@ typedef struct RootNode
 extern Token tokens[MAX_SIZE];
 extern int TokenCount;
 extern int TokenIndex;
+extern ROOT *root;
 
 void lexer(FILE *file);
 void parse_return (ROOT *Root, ExpressionNode *child);
