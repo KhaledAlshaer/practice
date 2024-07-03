@@ -60,6 +60,7 @@ void free_expression_node(ExpressionNode *node)
 
     free_expression_node(node->child);
     free_expression_node(node->next);
+    free(node->token.value);
     free(node);
 }
 
@@ -71,6 +72,7 @@ void free_token_node(TokenNode *node)
     }
 
     free_token_node(node->next);
+    free(node->token.value);
     free(node);
 }
 
@@ -87,7 +89,7 @@ void free_root_node(ROOT *root)
 }
 
 
-void parse_return (ExpressionNode *current)
+void parse_return (ExpressionNode **current)
 {
 
     if (TokenIndex >= TokenCount)
@@ -158,7 +160,7 @@ void parse_return (ExpressionNode *current)
                         val->next = closeParen;
                         closeParen->next = scolon;
                         ret->next = (ExpressionNode *) openParen;
-                        current = ret;
+                        *current = ret;
 
                         printf("Correct Return Statment horaaaaay!!\n");
                         
@@ -190,7 +192,7 @@ void parse_return (ExpressionNode *current)
 }
 
 
-void parse_main(ExpressionNode *current)
+void parse_main(ExpressionNode **current)
 {
     if (TokenIndex >= TokenCount)
     {
@@ -260,7 +262,7 @@ void parse_main(ExpressionNode *current)
                         openParen->next = closeParen;
                         closeParen->next = openCurly;
                         INT->next = (ExpressionNode *)MAIN;
-                        current = INT;
+                        *current = INT;
 
                         printf("Correct main Statment horaaaaay!!\n");
 
@@ -286,6 +288,7 @@ void parse_main(ExpressionNode *current)
             fprintf(stderr,"Syntax Error: Expected main\n");
         }
     }
+
 }
 
 
@@ -329,11 +332,11 @@ void parser()
     {
         if (strcmp(tokens[TokenIndex].value, "int") == 0 && strcmp(tokens[TokenIndex + 1].value, "main") == 0)
         {
-            parse_main(current);
+            parse_main(&current);
         }
         else if (strcmp(tokens[TokenIndex].value, "return") == 0)
         {
-            parse_return(current);
+            parse_return(&current);
         }
 
         TokenIndex++;

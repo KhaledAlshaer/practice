@@ -6,32 +6,32 @@ int TokenIndex = 0;
 ROOT *root;
 
 /**
- * main - Compiler's Main Function
- * Return: Returns 0 on Success
+ * 
+ * 
  */
 int main()
 {
-	FILE *file;
+    FILE *file;
 
-	file = fopen("test.c", "r");
+    file = fopen("test.c", "r");
 
-	lexer(file);
+    lexer(file);
 
-	for (int i = 0; i < TokenCount; i++)
-	{
-		printf("%s\n", tokens[i].value);
-	}
+    for (int i = 0; i < TokenCount; i++)
+    {
+        printf("%s\n", tokens[i].value);
+    }
     
-	fclose(file);
+    fclose(file);
 
-	parser();
+    parser();
 
-	free(root);
+    free(root);
 
-	for (int i = 0; i < TokenCount; i++)
-	{
-		free(tokens[i].value);
-	}
+    /**for (int i < 0; i < TokenCount; i++)
+    {
+        free(tokens[i].value);
+    }*/
 
-	return(0);
+    return(0);
 }
