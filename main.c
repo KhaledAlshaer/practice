@@ -26,8 +26,8 @@ int main()
 
     parser();
 
-    free(root);
-
+    /**free(root);
+*/
     /**for (int i < 0; i < TokenCount; i++)
     {
         free(tokens[i].value);

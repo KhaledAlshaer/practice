@@ -344,5 +344,7 @@ void parser()
 
     print_parse_tree(root); 
 
-    free_root_node(root);
+    /**free_root_node(root);
+    */
 }
+
