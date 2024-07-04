@@ -152,6 +152,7 @@ void parse_return (ExpressionNode **current)
 
                     if (strcmp(tokens[TokenIndex].value, ";") == 0)
                     {
+                        ExpressionNode *temp = *current;
                         Token scolonToken = {TOKEN_SEMICOLON, ";"};
 
                         TokenNode *scolon = create_token_node(scolonToken, NULL);
@@ -159,7 +160,8 @@ void parse_return (ExpressionNode **current)
                         openParen->next = val;
                         val->next = closeParen;
                         closeParen->next = scolon;
-                        ret->next = (ExpressionNode *) openParen;
+                        ret->next = (ExpressionNode *)openParen;
+                        temp->child = ret;
                         *current = ret;
 
                         printf("Correct Return Statment horaaaaay!!\n");
@@ -254,6 +256,7 @@ void parse_main(ExpressionNode **current)
 
                     if (strcmp(tokens[TokenIndex].value, "{") == 0)
                     {
+                        ExpressionNode *temp = *current;
                         Token openCurlyToken = {TOKEN_OPEN_CURLY_PAREN, "{"};
 
                         TokenNode *openCurly = create_token_node(openCurlyToken, NULL);
@@ -262,6 +265,7 @@ void parse_main(ExpressionNode **current)
                         openParen->next = closeParen;
                         closeParen->next = openCurly;
                         INT->next = (ExpressionNode *)MAIN;
+                        temp->child = INT;
                         *current = INT;
 
                         printf("Correct main Statment horaaaaay!!\n");
@@ -344,7 +348,5 @@ void parser()
 
     print_parse_tree(root); 
 
-    /**free_root_node(root);
-    */
+    free_root_node(root);
 }
-
