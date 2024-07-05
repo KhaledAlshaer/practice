@@ -59,8 +59,7 @@ void free_expression_node(ExpressionNode *node)
     }
 
     free_expression_node(node->child);
-    free_expression_node(node->next);
-    free(node->token.value);
+    free_expression_node((ExpressionNode *)node->next);
     free(node);
 }
 
@@ -72,7 +71,6 @@ void free_token_node(TokenNode *node)
     }
 
     free_token_node(node->next);
-    free(node->token.value);
     free(node);
 }
 
@@ -152,7 +150,6 @@ void parse_return (ExpressionNode **current)
 
                     if (strcmp(tokens[TokenIndex].value, ";") == 0)
                     {
-                        ExpressionNode *temp = *current;
                         Token scolonToken = {TOKEN_SEMICOLON, ";"};
 
                         TokenNode *scolon = create_token_node(scolonToken, NULL);
@@ -161,8 +158,9 @@ void parse_return (ExpressionNode **current)
                         val->next = closeParen;
                         closeParen->next = scolon;
                         ret->next = (ExpressionNode *)openParen;
-                        temp->child = ret;
-                        *current = ret;
+
+                        (*current)->child = ret;
+                        *current = (*current)->child;
 
                         printf("Correct Return Statment horaaaaay!!\n");
                         
@@ -256,7 +254,6 @@ void parse_main(ExpressionNode **current)
 
                     if (strcmp(tokens[TokenIndex].value, "{") == 0)
                     {
-                        ExpressionNode *temp = *current;
                         Token openCurlyToken = {TOKEN_OPEN_CURLY_PAREN, "{"};
 
                         TokenNode *openCurly = create_token_node(openCurlyToken, NULL);
@@ -265,8 +262,9 @@ void parse_main(ExpressionNode **current)
                         openParen->next = closeParen;
                         closeParen->next = openCurly;
                         INT->next = (ExpressionNode *)MAIN;
-                        temp->child = INT;
-                        *current = INT;
+
+                        (*current)->child = INT;
+                        *current = (*current)->child;
 
                         printf("Correct main Statment horaaaaay!!\n");
 
@@ -330,7 +328,9 @@ void print_parse_tree(ROOT *root)
 void parser()
 {
     root = create_root_node(NULL);
-    ExpressionNode *current = root->child;
+    Token curr = {TOKEN_UNKNOWN, ""};
+    ExpressionNode *current = create_expression_node(curr, NULL, NULL);
+    current = (ExpressionNode *)root;
 
     while (TokenIndex < TokenCount)
     {
