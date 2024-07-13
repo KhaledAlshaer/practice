@@ -1,6 +1,6 @@
 #include "header.h"
 /**
- * generat - Generates assembly code from the AST
+ * generate - Generates assembly code from the AST
  *
  * Description:
  * This function opens a file named "as.s" for writing and traverses the AST
@@ -10,7 +10,7 @@
  *
  * Return: This function does not return a value.
  */
-void generat(ExpressionNode *root, char *file_name)
+void generate(ExpressionNode *root, char *file_name)
 {
     file_name[strlen(file_name) - 2] = '\0';
 
@@ -36,7 +36,7 @@ void generat(ExpressionNode *root, char *file_name)
     // // system("rm as.s as.o");
 }
 /**
- * generat_main - Generates assembly code for the main function
+ * generate_main - Generates assembly code for the main function
  * @cur: Pointer to the current expression node
  * @f: Pointer to the file where the assembly code will be written
  *
@@ -45,7 +45,7 @@ void generat(ExpressionNode *root, char *file_name)
  *
  * Return: This function does not return a value.
  */
-void generat_main(ExpressionNode *cur, FILE *f)
+void generate_main(ExpressionNode *cur, FILE *f)
 {
 
     fprintf(f, "\
@@ -56,7 +56,7 @@ void generat_main(ExpressionNode *cur, FILE *f)
 ");
 }
 /**
- * generat_return - Generates assembly code for a return statement
+ * generate_return - Generates assembly code for a return statement
  * @cur: Pointer to the current expression node
  * @f: Pointer to the file where the assembly code will be written
  *
@@ -67,7 +67,7 @@ void generat_main(ExpressionNode *cur, FILE *f)
  *
  * Return: This function does not return a value.
  */
-void generat_return(ExpressionNode *cur, FILE *f)
+void generate_return(ExpressionNode *cur, FILE *f)
 {
     fprintf(f, "\
 \tmov rax, 60\n\
