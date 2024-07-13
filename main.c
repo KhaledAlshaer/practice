@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
 	ExpressionNode *root = parser();
 
-	generat(root, argv[1]);
+	generate(root, argv[1]);
 
 	return (0);
 }
