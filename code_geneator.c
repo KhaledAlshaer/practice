@@ -20,11 +20,11 @@ void generat(ExpressionNode *root, char *file_name)
     {
         if (cur->token.type == TOKEN_INT && cur->next != NULL && cur->next->token.type == TOKEN_MAIN)
         {
-            generat_main(cur, file);
+            generate_main(cur, file);
         }
         else if (cur->token.type == TOKEN_RETURN)
         {
-            generat_return(cur, file);
+            generate_return(cur, file);
         }
         cur = cur->child;
     }
