@@ -13,11 +13,13 @@ int main(int argc, char *argv[])
 	if (argc != 2)
 	{
 		fprintf(stderr, "Enter one file\n");
+		return (1);
 	}
 
 	if (strstr(argv[1], ".c") == NULL)
 	{
 		fprintf(stderr, "extension is not .c\n");
+		return (1);
 	}
 
 	FILE *file;
@@ -27,6 +29,7 @@ int main(int argc, char *argv[])
 	if (file == NULL)
 	{
 		fprintf(stderr, "file not found\n");
+		return (1);
 	}
 
 	lexer(file);
