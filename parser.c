@@ -1,22 +1,5 @@
 #include "header.h"
-
-// Token tokens[MAX_SIZE];
-// int TokenCount = 0;
-// int TokenIndex = 0;
-/**
- * create_expression_node - Creates a new expression node
- * @token: The token to be stored in the expression node
- * @child: Pointer to the child expression node
- * @next: Pointer to the next expression node
- *
- * Description:
- * This function allocates memory for a new expression node, initializes it with
- * the provided token, child node, and next node, and returns a pointer to the new node.
- * If memory allocation fails, it logs an error message and exits the program.
- *
- * Return: Pointer to the newly created expression node
- */
-ExpressionNode *create_expression_node(Token token, ExpressionNode *child, ExpressionNode *next)
+ExpressionNode *create_expression_node(Token token, ExpressionNode *child, TokenNode *next)
 {
     ExpressionNode *node = (ExpressionNode *)malloc(sizeof(ExpressionNode));
     if (node == NULL)
@@ -31,18 +14,7 @@ ExpressionNode *create_expression_node(Token token, ExpressionNode *child, Expre
 
     return (node);
 }
-/**
- * create_token_node - Creates a new token node
- * @token: The token to be stored in the token node
- * @next: Pointer to the next token node
- *
- * Description:
- * This function allocates memory for a new token node, initializes it with
- * the provided token and next node, and returns a pointer to the new node.
- * If memory allocation fails, it logs an error message and exits the program.
- *
- * Return: Pointer to the newly created token node
- */
+
 TokenNode *create_token_node(Token token, TokenNode *next)
 {
     TokenNode *node = (TokenNode *)malloc(sizeof(TokenNode));
@@ -57,17 +29,7 @@ TokenNode *create_token_node(Token token, TokenNode *next)
 
     return (node);
 }
-/**
- * create_root_node - Creates a new root node
- * @child: Pointer to the child expression node
- *
- * Description:
- * This function allocates memory for a new root node, initializes it with
- * the provided child node, and returns a pointer to the new node.
- * If memory allocation fails, it logs an error message and exits the program.
- *
- * Return: Pointer to the newly created root node
- */
+
 ROOT *create_root_node(ExpressionNode *child)
 {
     ROOT *node = (ROOT *)malloc(sizeof(ROOT));
@@ -82,16 +44,7 @@ ROOT *create_root_node(ExpressionNode *child)
 
     return (node);
 }
-/**
- * free_expression_node - Frees an expression node and its children
- * @node: Pointer to the expression node to be freed
- *
- * Description:
- * This function recursively frees the memory allocated for the expression node
- * and its child and next nodes.
- *
- * Return: This function does not return a value.
- */
+
 void free_expression_node(ExpressionNode *node)
 {
     if (node == NULL)
@@ -100,19 +53,10 @@ void free_expression_node(ExpressionNode *node)
     }
 
     free_expression_node(node->child);
-    free_expression_node(node->next);
+    free_token_node(node->next);
     free(node);
 }
-/**
- * free_token_node - Frees a token node and its next nodes
- * @node: Pointer to the token node to be freed
- *
- * Description:
- * This function recursively frees the memory allocated for the token node
- * and its next nodes.
- *
- * Return: This function does not return a value.
- */
+
 void free_token_node(TokenNode *node)
 {
     if (node == NULL)
@@ -123,16 +67,7 @@ void free_token_node(TokenNode *node)
     free_token_node(node->next);
     free(node);
 }
-/**
- * free_root_node - Frees the root node and its child nodes
- * @root: Pointer to the root node to be freed
- *
- * Description:
- * This function frees the memory allocated for the root node and recursively
- * frees its child nodes.
- *
- * Return: This function does not return a value.
- */
+
 void free_root_node(ROOT *root)
 {
     if (root == NULL)
@@ -144,25 +79,14 @@ void free_root_node(ROOT *root)
 
     free(root);
 }
-/**
- * parse_return - Parses a return statement from the token list
- * @current: Double pointer to the current expression node in the AST
- *
- * Description:
- * This function parses a return statement from the token list. It checks the syntax
- * and structure of the return statement, including parentheses and semicolon. If the
- * syntax is correct, it creates corresponding expression nodes and links them in the AST.
- * If any syntax error is encountered, it logs an appropriate error message.
- *
- * Return: This function does not return a value.
- */
-void parse_return(ExpressionNode **current)
+
+ExpressionNode *parse_return(ExpressionNode **current)
 {
 
     if (TokenIndex >= TokenCount)
     {
         fprintf(stderr, "Error: Reached end of tokens :')\n");
-        return;
+        return NULL;
     }
 
     if (strcmp(tokens[TokenIndex].value, "return") == 0)
@@ -175,7 +99,7 @@ void parse_return(ExpressionNode **current)
         if (TokenIndex >= TokenCount)
         {
             fprintf(stderr, "Error: Unexpected end of tokens :')\n");
-            return;
+            return NULL;
         }
 
         if (strcmp(tokens[TokenIndex].value, "(") == 0)
@@ -188,7 +112,7 @@ void parse_return(ExpressionNode **current)
             if (TokenIndex >= TokenCount)
             {
                 fprintf(stderr, "Error: Unexpected end of tokens :') \n");
-                return;
+                return NULL;
             }
 
             if (tokens[TokenIndex].type == TOKEN_LITERAL_INT)
@@ -201,7 +125,7 @@ void parse_return(ExpressionNode **current)
                 if (TokenIndex >= TokenCount)
                 {
                     fprintf(stderr, "Error: Unexpected end of tokens :') \n");
-                    return;
+                    return NULL;
                 }
 
                 if (strcmp(tokens[TokenIndex].value, ")") == 0)
@@ -214,7 +138,7 @@ void parse_return(ExpressionNode **current)
                     if (TokenIndex >= TokenCount)
                     {
                         fprintf(stderr, "Error: Unexpected end of tokens :') \n");
-                        return;
+                        return NULL;
                     }
 
                     if (strcmp(tokens[TokenIndex].value, ";") == 0)
@@ -226,14 +150,15 @@ void parse_return(ExpressionNode **current)
                         openParen->next = val;
                         val->next = closeParen;
                         closeParen->next = scolon;
-                        ret->next = (ExpressionNode *)openParen;
+                        ret->next = openParen;
 
-                        (*current)->child = ret;
-                        *current = (*current)->child;
+                        // *current = ret;
+                        // *current = (*current)->child;
+                        return ret;
 
-                        printf("Correct Return Statment horaaaaay!!\n");
+                        // printf("Correct Return Statment horaaaaay!!\n");
 
-                        return;
+                        return NULL;
                     }
                     else
                     {
@@ -259,24 +184,13 @@ void parse_return(ExpressionNode **current)
 
     fprintf(stderr, "Syntax Error: Invalid Return Statment :') \n");
 }
-/**
- * parse_main - Parses the main function from the token list
- * @current: Double pointer to the current expression node in the AST
- *
- * Description:
- * This function parses the main function from the token list. It checks the syntax and structure
- * of the main function declaration, including parentheses and curly braces. If the syntax is correct,
- * it creates corresponding expression nodes and links them in the AST. If any syntax error is encountered,
- * it logs an appropriate error message.
- *
- * Return: This function does not return a value.
- */
-void parse_main(ExpressionNode **current)
+
+ExpressionNode *parse_main(ExpressionNode **current)
 {
     if (TokenIndex >= TokenCount)
     {
         fprintf(stderr, "Error: Reached end of tokens :') \n");
-        return;
+        return NULL;
     }
 
     if (strcmp(tokens[TokenIndex].value, "int") == 0)
@@ -289,7 +203,7 @@ void parse_main(ExpressionNode **current)
         if (TokenIndex >= TokenCount)
         {
             fprintf(stderr, "Error: Reached end of tokens :') \n");
-            return;
+            return NULL;
         }
 
         if (strcmp(tokens[TokenIndex].value, "main") == 0)
@@ -302,7 +216,7 @@ void parse_main(ExpressionNode **current)
             if (TokenIndex >= TokenCount)
             {
                 fprintf(stderr, "Error: Reached end of tokens :') \n");
-                return;
+                return NULL;
             }
 
             if (strcmp(tokens[TokenIndex].value, "(") == 0)
@@ -315,7 +229,7 @@ void parse_main(ExpressionNode **current)
                 if (TokenIndex >= TokenCount)
                 {
                     fprintf(stderr, "Error: Reached end of tokens :') \n");
-                    return;
+                    return NULL;
                 }
 
                 if (strcmp(tokens[TokenIndex].value, ")") == 0)
@@ -328,7 +242,7 @@ void parse_main(ExpressionNode **current)
                     if (TokenIndex >= TokenCount)
                     {
                         fprintf(stderr, "Error: Reached end of tokens :') \n");
-                        return;
+                        return NULL;
                     }
 
                     if (strcmp(tokens[TokenIndex].value, "{") == 0)
@@ -340,14 +254,13 @@ void parse_main(ExpressionNode **current)
                         MAIN->next = openParen;
                         openParen->next = closeParen;
                         closeParen->next = openCurly;
-                        INT->next = (ExpressionNode *)MAIN;
+                        INT->next = MAIN;
 
-                        (*current)->child = INT;
-                        *current = (*current)->child;
+                        // *current = INT;
+                        // *current = (*current)->child;
+                        return INT;
 
-                        printf("Correct main Statment horaaaaay!!\n");
-
-                        return;
+                        // printf("Correct main Statment horaaaaay!!\n");
                     }
                     else
                     {
@@ -371,63 +284,61 @@ void parse_main(ExpressionNode **current)
     }
 }
 
-void print_expression_tree(ExpressionNode *node, int depth)
-{
-    if (node == NULL)
-    {
-        return;
-    }
+// void print_expression_tree(ExpressionNode *node, int depth)
+// {
+//     if (node == NULL)
+//     {
+//         return NULL;
+//     }
 
-    for (int i = 0; i < depth; ++i)
-    {
-        printf("  ");
-    }
-    printf("- Token: %s\n", node->token.value);
+//     for (int i = 0; i < depth; ++i)
+//     {
+//         printf("  ");
+//     }
+//     printf("- Token: %s\n", node->token.value);
 
-    print_expression_tree(node->child, depth + 1);
+//     print_expression_tree(node->child, depth + 1);
 
-    print_expression_tree(node->next, depth);
-}
+//     // print_expression_tree(node->next, depth);
+// }
 
-void print_parse_tree(ROOT *root)
-{
-    if (root == NULL)
-    {
-        printf("Parse tree is empty.\n");
-        return;
-    }
+// void print_parse_tree(ROOT *root)
+// {
+//     if (root == NULL)
+//     {
+//         printf("Parse tree is empty.\n");
+//         return NULL;
+//     }
 
-    printf("Parse Tree:\n");
-    print_expression_tree(root->child, 0);
-}
+//     printf("Parse Tree:\n");
+//     print_expression_tree(root->child, 0);
+// }
 
 /**
- * parser - Parses the tokens to construct an abstract syntax tree (AST)
- *
- * Description:
- * This function parses the list of tokens and constructs an abstract syntax tree (AST).
- * It initializes the root of the AST and iterates through the tokens, identifying and
- * parsing specific constructs such as the main function and return statements.
- * The corresponding parsing functions are called to handle these constructs.
- *
- * Return: This function does not return a value.
+ * parser - The Main Parser Function
  */
-void parser()
+ExpressionNode *parser()
 {
-    root = create_root_node(NULL);
-    ExpressionNode *current = (ExpressionNode *)root;
+
+    ExpressionNode *root = create_expression_node((Token){0}, NULL, NULL);
+    ExpressionNode *current = root;
 
     while (TokenIndex < TokenCount)
     {
         if (strcmp(tokens[TokenIndex].value, "int") == 0 && strcmp(tokens[TokenIndex + 1].value, "main") == 0)
         {
-            parse_main(&current);
+            current->child = parse_main(&current);
         }
         else if (strcmp(tokens[TokenIndex].value, "return") == 0)
         {
-            parse_return(&current);
+            current->child = parse_return(&current);
         }
-
+        current = current->child;
         TokenIndex++;
     }
+
+    // print_parse_tree(root);
+
+    // free_root_node(root);
+    return root;
 }

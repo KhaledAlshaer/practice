@@ -10,8 +10,10 @@
  *
  * Return: This function does not return a value.
  */
-void generat()
+void generat(ExpressionNode *root, char *file_name)
 {
+    file_name[strlen(file_name) - 2] = '\0';
+
     FILE *file = fopen("as.s", "w");
     ExpressionNode *cur = root->child;
     while (cur != NULL)
@@ -26,6 +28,12 @@ void generat()
         }
         cur = cur->child;
     }
+    // system("gcc -o r as.s");
+    // char *command[256];
+    // sprintf(command, "gcc -o %s as.o", file_name);
+
+    // system(command);
+    // // system("rm as.s as.o");
 }
 /**
  * generat_main - Generates assembly code for the main function
@@ -41,9 +49,10 @@ void generat_main(ExpressionNode *cur, FILE *f)
 {
 
     fprintf(f, "\
+.section .text\n\
 .global main\n\
 .intel_syntax noprefix\n\
-main:\n\
+\nmain:\n\
 ");
 }
 /**
@@ -66,9 +75,4 @@ void generat_return(ExpressionNode *cur, FILE *f)
 \tsyscall\n\
 ",
             cur->next->next->token.value);
-}
-
-int main()
-{
-    generat();
 }

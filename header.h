@@ -8,7 +8,8 @@
 
 #define MAX_SIZE 1024
 
-typedef enum {
+typedef enum
+{
     TOKEN_SEMICOLON,
     TOKEN_OPEN_PAREN,
     TOKEN_CLOSE_PAREN,
@@ -22,50 +23,50 @@ typedef enum {
     TOKEN_MAIN,
 } TokenType;
 
-typedef struct {
+typedef struct
+{
     TokenType type;
     char *value;
 } Token;
 
-typedef struct TokenNode 
+typedef struct TokenNode
 {
     Token token;
     struct TokenNode *next;
 } TokenNode;
 
-typedef struct ExpressionNode 
+typedef struct ExpressionNode
 {
     Token token;
     struct ExpressionNode *child;
-    struct ExpressionNode *next;
+    TokenNode *next;
 } ExpressionNode;
 
-typedef struct RootNode 
+typedef struct RootNode
 {
-    struct ExpressionNode *child;
+    ExpressionNode *child;
 } ROOT;
-
 
 extern Token tokens[MAX_SIZE];
 extern int TokenCount;
 extern int TokenIndex;
-extern ROOT *root;
+// extern ROOT *root;
 
 void lexer(FILE *file);
-void parse_return (ExpressionNode **child);
-void parse_main(ExpressionNode **child);
-void parser ();
-void generate(ExpressionNode *root, char *file_name);
-void add_token(TokenType type, const char *val);
-ExpressionNode *create_expression_node(Token token, ExpressionNode *child, ExpressionNode *next);
-TokenNode *create_token_node(Token token, TokenNode *next);
-ROOT *create_root_node(ExpressionNode *child);
-void print_expression_tree(ExpressionNode *node, int depth);
-void print_parse_tree(ROOT *root);
+void generat(ExpressionNode *root, char *file_name);
+ExpressionNode *parser();
+
+
+
+
+
+
+
+
 void free_expression_node(ExpressionNode *node);
+
 void free_token_node(TokenNode *node);
+
 void free_root_node(ROOT *root);
-void generate_main(ExpressionNode *cur, FILE *f);
-void generate_return(ExpressionNode *cur, FILE *f);
 
 #endif
