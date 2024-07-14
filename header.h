@@ -37,7 +37,7 @@ typedef struct ExpressionNode
 {
     Token token;
     struct ExpressionNode *child;
-    struct ExpressionNode *next;
+    struct TokenNode *next;
 } ExpressionNode;
 
 typedef struct RootNode 

@@ -10,7 +10,7 @@ ExpressionNode *create_expression_node(Token token, ExpressionNode *child, Token
 
     node->token = token;
     node->child = child;
-    node->next = (ExpressionNode *)next;
+    node->next = next;
 
     return (node);
 }
@@ -53,7 +53,7 @@ void free_expression_node(ExpressionNode *node)
     }
 
     free_expression_node(node->child);
-    free_token_node((TokenNode *)node->next);
+    free_token_node(node->next);
     free(node);
 }
 
@@ -150,7 +150,7 @@ ExpressionNode *parse_return(ExpressionNode **current)
                         openParen->next = val;
                         val->next = closeParen;
                         closeParen->next = scolon;
-                        ret->next = (ExpressionNode *)openParen;
+                        ret->next = openParen;
 
                         // *current = ret;
                         // *current = (*current)->child;
@@ -254,7 +254,7 @@ ExpressionNode *parse_main(ExpressionNode **current)
                         MAIN->next = openParen;
                         openParen->next = closeParen;
                         closeParen->next = openCurly;
-                        INT->next = (ExpressionNode *)MAIN;
+                        INT->next = MAIN;
 
                         // *current = INT;
                         // *current = (*current)->child;
