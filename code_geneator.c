@@ -30,7 +30,7 @@ void generate(ExpressionNode *root, char *file_name)
 	}
 	fclose(file);
 	system("as -o as.o as.s");
-	char *command[256];
+	char command[256];
 	sprintf(command, "gcc -o %s as.o", file_name);
 
 	system(command);
