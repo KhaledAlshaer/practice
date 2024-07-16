@@ -14,7 +14,7 @@ void generate(ExpressionNode *root, char *file_name)
 {
     file_name[strlen(file_name) - 2] = '\0';
 
-    FILE *file = fopen("as.s", "w");
+    FILE *file = fopen(file_name, "w");
     ExpressionNode *cur = root->child;
     while (cur != NULL)
     {
