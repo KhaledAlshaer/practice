@@ -68,7 +68,7 @@ void free_token_node(TokenNode *node)
     free(node);
 }
 
-void free_root_node(ROOT *root)
+void free_root_node(ExpressionNode *root)
 {
     if (root == NULL)
     {
@@ -337,8 +337,5 @@ ExpressionNode *parser()
         TokenIndex++;
     }
 
-    // print_parse_tree(root);
-
-    // free_root_node(root);
     return root;
 }

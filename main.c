@@ -40,5 +40,7 @@ int main(int argc, char *argv[])
 
 	generate(root, argv[1]);
 
+	free_root_node(root);
+
 	return (0);
 }

@@ -64,7 +64,7 @@ void print_expression_tree(ExpressionNode *node, int depth);
 void print_parse_tree(ROOT *root);
 void free_expression_node(ExpressionNode *node);
 void free_token_node(TokenNode *node);
-void free_root_node(ROOT *root);
+void free_root_node(ExpressionNode *root);
 void generate_main(ExpressionNode *cur, FILE *f);
 void generate_return(ExpressionNode *cur, FILE *f);
 
