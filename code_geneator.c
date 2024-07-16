@@ -12,28 +12,29 @@
  */
 void generate(ExpressionNode *root, char *file_name)
 {
-    file_name[strlen(file_name) - 2] = '\0';
+	file_name[strlen(file_name) - 2] = '\0';
 
-    FILE *file = fopen(file_name, "w");
-    ExpressionNode *cur = root->child;
-    while (cur != NULL)
-    {
-        if (cur->token.type == TOKEN_INT && cur->next != NULL && cur->next->token.type == TOKEN_MAIN)
-        {
-            generate_main(cur, file);
-        }
-        else if (cur->token.type == TOKEN_RETURN)
-        {
-            generate_return(cur, file);
-        }
-        cur = cur->child;
-    }
-    // system("gcc -o r as.s");
-    // char *command[256];
-    // sprintf(command, "gcc -o %s as.o", file_name);
+	FILE *file = fopen("as.s", "w");
+	ExpressionNode *cur = root->child;
+	while (cur != NULL)
+	{
+		if (cur->token.type == TOKEN_INT && cur->next != NULL && cur->next->token.type == TOKEN_MAIN)
+		{
+			generate_main(cur, file);
+		}
+		else if (cur->token.type == TOKEN_RETURN)
+		{
+			generate_return(cur, file);
+		}
+		cur = cur->child;
+	}
+	fclose(file);
+	system("as -o as.o as.s");
+	char *command[256];
+	sprintf(command, "gcc -o %s as.o", file_name);
 
-    // system(command);
-    // // system("rm as.s as.o");
+	system(command);
+	system("rm as.s as.o");
 }
 /**
  * generate_main - Generates assembly code for the main function
